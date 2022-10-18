@@ -9,6 +9,14 @@ class MissingParameter(ControlWrapperException):
     """Exception generated when a parameter is missing."""
     pass
 
+class UnknownParameter(ControlWrapperException):
+    """Exception generated when a parameter is not recognized."""
+    pass
+
 class MaxRetriesExeption(ControlWrapperException):
     """Exception generated when the maximum number of retries is reached."""
+    pass
+
+class HTTPException(ControlWrapperException):
+    """Exception generated when HTTT request error occurs."""
     pass

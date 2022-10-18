@@ -1,0 +1,1 @@
+UPDATE_USER_PARAMS = ('name', 'email', 'credits', 'server_limit', 'role')
