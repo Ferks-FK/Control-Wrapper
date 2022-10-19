@@ -4,7 +4,7 @@
 </br>
 
 ![Discord](https://img.shields.io/discord/876934115302178876?label=DISCORD&style=for-the-badge)
-![Contributors](https://img.shields.io/github/contributors/Ferks-FK/Pterodactyl-AutoAddons?style=for-the-badge)
+![Contributors](https://img.shields.io/github/contributors/Ferks-FK/Control-Wrapper?style=for-the-badge)
 
 <h1 align="center">What is this?</h1>
 
