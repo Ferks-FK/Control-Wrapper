@@ -1,10 +1,7 @@
-from typing import Dict, Optional
-from ..errors import HTTPException
+from typing import Dict, Tuple, Union
 
 #if TYPE_CHECKING:
-from aiohttp import ClientSession, ClientResponse
-
-
+from aiohttp import ClientSession
 
 class HTTPClient:
     def __init__(self, token: str, url: str) -> None:
@@ -17,25 +14,43 @@ class HTTPClient:
         }
         self.__session: ClientSession = ClientSession(headers=headers)
     
+    def parse_filters(self, base_endpoint: str, filter: dict):
+        base_endpoint += "/?"
+        list_filters = []
+
+        for index, key in enumerate(filter):
+            filters = f"filter[{key}]={filter.get(key)}" # Todo: enconding?
+
+            if index >= 1:
+                filters = "&" + filters
+            
+            list_filters.append(filters)
+
+        for filter in list_filters:
+            base_endpoint += filter
+        
+        return base_endpoint
+
     async def close(self) -> None:
         if self.__session:
             await self.__session.close()
     
-    async def request(self, method: str, endpoint: str, kwargs):
+    async def request(self, method: str, endpoint: str, kwargs=None, filters: dict = None, includes: list = None) -> Union[Tuple, Dict]:
         base_endpoint = self.url + endpoint
-        response: Optional[ClientResponse] = None
 
-        print(kwargs, "PRIMEIRO REQUEST")
+        if filters:
+            base_endpoint = self.parse_filters(base_endpoint, filters)
+        
+        if includes:
+            base_endpoint = base_endpoint + f"/?include={','.join(includes)}"
 
+        print(base_endpoint)
+            
         async with self.__session.request(method, base_endpoint, json=kwargs) as response:
-            print(method, "SEGUNDO REQUEST")
             response_json = await response.json()
             await self.close()
 
-            if response.status == 200:
-                return response_json
-            
-            raise HTTPException(f"Could not query the API. Code: {response.status}.")
+            return response.status, response_json
 
 
 

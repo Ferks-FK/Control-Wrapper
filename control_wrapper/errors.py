@@ -20,3 +20,7 @@ class MaxRetriesExeption(ControlWrapperException):
 class HTTPException(ControlWrapperException):
     """Exception generated when HTTT request error occurs."""
     pass
+
+class ExcessiveParametres(ControlWrapperException):
+    """Exception generated when two or more incompatible parameters are passed."""
+    pass
