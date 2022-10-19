@@ -43,8 +43,6 @@ class HTTPClient:
         
         if includes:
             base_endpoint = base_endpoint + f"/?include={','.join(includes)}"
-
-        print(base_endpoint)
             
         async with self.__session.request(method, base_endpoint, json=kwargs) as response:
             response_json = await response.json()
