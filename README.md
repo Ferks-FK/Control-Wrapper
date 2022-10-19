@@ -34,7 +34,10 @@ import asyncio
 api = CPGG("https://mydomain.com", "my token")
 
 async def get_users():
-    return await api.user.list_users()
+    users = await api.user.list_users()
+    print(users)
+    
+    return users
  
 asyncio.run(get_users())
 ```
