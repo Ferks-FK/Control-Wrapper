@@ -64,10 +64,11 @@ class User(HTTPClient):
             await self.close()
             raise ExcessiveParametres("You cannot use the 'filters' and 'includes' parameters together, just use one of them.")
 
-        for include in includes:
-            if include not in AVAILABLE_INCLUDES_USERS_PARAMS:
-                await self.close()
-                raise UnknownParameter(f"The include '{include}' is not recognized. Available Includes: {AVAILABLE_INCLUDES_USERS_PARAMS}.")
+        if includes:
+            for include in includes:
+                if include not in AVAILABLE_INCLUDES_USERS_PARAMS:
+                    await self.close()
+                    raise UnknownParameter(f"The include '{include}' is not recognized. Available Includes: {AVAILABLE_INCLUDES_USERS_PARAMS}.")
 
         response = await self.request("GET", "api/users", filters=filters, includes=includes)
 
