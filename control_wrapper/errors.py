@@ -13,14 +13,14 @@ class UnknownParameter(ControlWrapperException):
     """Exception generated when a parameter is not recognized."""
     pass
 
+class UnknownRole(ControlWrapperException):
+    """Exception generated when user supply an unknown role."""
+    pass
+
 class MaxRetriesExeption(ControlWrapperException):
     """Exception generated when the maximum number of retries is reached."""
     pass
 
 class HTTPException(ControlWrapperException):
     """Exception generated when HTTT request error occurs."""
-    pass
-
-class ExcessiveParametres(ControlWrapperException):
-    """Exception generated when two or more incompatible parameters are passed."""
     pass

@@ -1,9 +1,9 @@
-from typing import TYPE_CHECKING, Union, Dict, List
+from typing import TYPE_CHECKING, Union, Dict, List, Any
 
 #if TYPE_CHECKING:
 from .http import HTTPClient
 from ..constants import *
-from ..errors import MissingParameter, UnknownParameter, HTTPException, ExcessiveParametres
+from ..errors import UnknownParameter, UnknownRole
 
 class User(HTTPClient):
     def __init__(self, *args, **kwargs):
@@ -19,8 +19,12 @@ class User(HTTPClient):
         suspended: bool = None,
         includes: list = None
     ) -> Union[Dict, List[Dict], None]:
-        """
-        Returns all users registered in the system.
+        """|Corrotine|
+
+        Returns
+        -------
+
+        Returns all users registered in the system or None if a specific user is not found.
 
         Optionally you can provide Filters or Includes user query.
 
@@ -44,10 +48,6 @@ class User(HTTPClient):
         includes: :class:`list`
             List of includes. Available Includes: `['servers', 'payments', 'vouchers', 'discordUser', 'notifications']`.
 
-        Returns
-        -------
-        :class:`Union[Dict, List[Dict], None]`
-
         """
 
         filters = {
@@ -63,10 +63,10 @@ class User(HTTPClient):
         if includes:
             for include in includes:
                 if include not in AVAILABLE_INCLUDES_USERS_PARAMS:
-                    await self.close()
+                    await self.__close()
                     raise UnknownParameter(f"The include '{include}' is not recognized. Available Includes: {AVAILABLE_INCLUDES_USERS_PARAMS}.")
 
-        response = await self.request("GET", "api/users", filters=filters, includes=includes)
+        response = await self._request("GET", "api/users", filters=filters, includes=includes)
 
         if not response[1]['data']:
             return None
@@ -74,43 +74,111 @@ class User(HTTPClient):
         return response[1]
     
     async def user_details(self, id: int) -> Union[Dict, None]:
-        response = await self.request("GET", f"api/users/{id}")
+        """|Corrotine|
+
+        Returns
+        -------
+        Returns data for a specific user, or None if the user is not found.
+
+        This is useful for checking whether a user has verified his discord account.
+
+        Parameters
+        ----------
+        id: :class:`int`
+            The user ID or discord_id.
+        """
+        response = await self._request("GET", f"api/users/{id}")
 
         if response[0] == 404:
             return None
 
         return response[1]
     
-    async def update_user(self, id: int, **kwargs) -> Dict:
-        for key in kwargs.keys():
+    async def update_user(self, id: int, name: str, email: str, **kwargs: Any) -> Union[Dict, Dict[List, str]]:
+        """|Corrotine|
+
+        Returns
+        -------
+        Returns a dictionary with the user updated data.
+
+        If the `email` is in the incorrect format, an error will be returned.
+        
+        Parameters
+        ----------
+        id: :class:`int`
+            The user ID.
+        name: :class:`str`
+            The new user name.
+        email: :class:`str`
+            The new email of the user.
+        credits: Optional[:class:`int`]
+            The new user credits.
+        server_limit: Optional[:class:`int`]
+            The amount of servers user can manage.
+        role: Optional[:class:`str`]
+            The new user role. Valid Roles: `['admin', 'mod', 'client', 'member']`.
+        
+        Info
+        ----
+        For some reason the API forces you to pass the user `name` and `email` address in order to update it.
+        """
+        for key, value in kwargs.items():
             if key not in AVAILABLE_UPDATE_USER_PARAMS:
-                await self.close()
-                raise UnknownParameter(f"The parameter '{key}' is not recognized. Available Parameter: {AVAILABLE_UPDATE_USER_PARAMS}.")
-            
-        if kwargs.get('name') is None or kwargs.get('email') is None:
-            await self.close()
-            raise MissingParameter("You need to specify the parameters 'name' and 'email' for the user update.")
-        
-        if kwargs.get('role') is not None:
-            if kwargs.get('role') not in AVAILABLE_UPDATE_ROLE_PARAMS:
-                await self.close()
-                raise UnknownParameter(f"The value '{kwargs.get('role')}' does not exist. Available Values: {AVAILABLE_UPDATE_ROLE_PARAMS}.")
-        
-        response = await self.request("PATCH", f"api/users/{id}", kwargs)
-        return response[1]
-    
-    async def suspend_user(self, id: int) -> Dict:
-        response = await self.request("PATCH", f"api/users/{id}/suspend")
+                await self.__close()
+                raise UnknownParameter(f"The parameter '{value}' is not recognized. Available Parameters: {AVAILABLE_UPDATE_USER_PARAMS}.")
+
+            if key == "role" and value not in AVAILABLE_UPDATE_ROLE_PARAMS:
+                await self.__close()
+                raise UnknownRole(f"The role '{value}' is not recognized, Available Roles: {AVAILABLE_UPDATE_ROLE_PARAMS}.")
+
+        kwargs['name'] = name
+        kwargs['email'] = email
+
+        response = await self._request("PATCH", f"api/users/{id}", kwargs)
 
         if response[0] == 422:
-            raise HTTPException("This user is already suspended.")
+            return response[1]['errors']
+
+        return response[1]
+    
+    async def suspend_user(self, id: int) -> Union[Dict, Dict[List, str]]:
+        """|Corrotine|
+
+        Returns
+        -------
+        Returns a dict of the user who was suspended.
+
+        If the user is already suspended, an error will be returned.
+
+        Parameters
+        ----------
+        id: :class:`int`
+            The user ID.
+        """
+        response = await self._request("PATCH", f"api/users/{id}/suspend")
+
+        if response[0] == 422:
+            return response[1]['errors']
         
         return response[1]
     
-    async def unsuspend_user(self, id: int) -> Dict:
-        response = await self.request("PATCH", f"api/users/{id}/unsuspend")
+    async def unsuspend_user(self, id: int) -> Union[Dict, Dict[List, str]]:
+        """|Corrotine|
+
+        Returns
+        -------
+        Returns a dict of the user who had his suspension revoked.
+        
+        If the user is not already suspended, an error will be returned.
+
+        Parameters
+        ----------
+        id: :class:`int`
+            The user ID.
+        """
+        response = await self._request("PATCH", f"api/users/{id}/unsuspend")
         
         if response[0] == 422:
-            raise HTTPException("You cannot unsuspend a user who is not suspended.")
+            return response[1]['errors']
         
         return response[1]
