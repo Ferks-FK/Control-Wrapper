@@ -27,6 +27,8 @@ pip install git+https://github.com/Ferks-FK/Control-Wrapper@development
 
 <h1 align="center">Usage Examples</h1>
 
+<h3>Get all users</h3>
+
 ```py
 from control_wrapper import ControlWrapper as CPGG
 import asyncio
@@ -35,6 +37,23 @@ api = CPGG("https://mydomain.com", "my token")
 
 async def get_users():
     users = await api.user.list_users()
+    print(users)
+    
+    return users
+ 
+asyncio.run(get_users())
+```
+
+<h3>Get specific user using filters</h3>
+
+```py
+from control_wrapper import ControlWrapper as CPGG
+import asyncio
+
+api = CPGG("https://mydomain.com", "my token")
+
+async def get_users():
+    users = await api.user.list_users(name="ferks", email="test@test.com", includes=['servers'])
     print(users)
     
     return users
