@@ -22,7 +22,7 @@ class User(HTTPClient):
         """
         Returns all users registered in the system.
 
-        Optionally you can provide user query filters.
+        Optionally you can provide Filters or Includes user query.
 
         Filters
         -------
@@ -59,10 +59,6 @@ class User(HTTPClient):
             'suspended': 1 if suspended else (0 if suspended is False else suspended) # https://github.com/ControlPanel-gg/dashboard/issues/582
         }
         filters = {key: value for key, value in filters.items() if value is not None}
-
-        if filters and includes:
-            await self.close()
-            raise ExcessiveParametres("You cannot use the 'filters' and 'includes' parameters together, just use one of them.")
 
         if includes:
             for include in includes:

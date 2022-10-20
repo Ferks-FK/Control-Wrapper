@@ -2,6 +2,7 @@ from typing import Dict, Tuple, Union
 
 #if TYPE_CHECKING:
 from aiohttp import ClientSession
+from urllib import parse
 
 class HTTPClient:
     def __init__(self, token: str, url: str) -> None:
@@ -14,21 +15,25 @@ class HTTPClient:
         }
         self.__session: ClientSession = ClientSession(headers=headers)
     
-    def parse_filters(self, base_endpoint: str, filter: dict):
-        base_endpoint += "/?"
-        list_filters = []
+    def parse_data(self, base_endpoint: str, filters: dict, includes: list) -> str:
+        base_endpoint += "?"
 
-        for index, key in enumerate(filter):
-            filters = f"filter[{key}]={filter.get(key)}" # Todo: enconding?
-
-            if index >= 1:
-                filters = "&" + filters
-            
-            list_filters.append(filters)
-
-        for filter in list_filters:
-            base_endpoint += filter
+        if filters and includes:
+            filters_includes = [{
+                'filters': {f'filter[{filter}]': filters[filter] for filter in filters},
+                'includes': ','.join(includes)
+            }]
+            return base_endpoint + parse.urlencode(filters_includes[0]['filters']) + f"&include={filters_includes[0]['includes']}"
         
+        elif filters:
+            filters = {
+                'filters': {f'filter[{filter}]': filters[filter] for filter in filters}
+            }
+            return base_endpoint + parse.urlencode(filters['filters'])
+        
+        elif includes:
+            return base_endpoint + f"&include={','.join(includes)}"
+
         return base_endpoint
 
     async def close(self) -> None:
@@ -36,14 +41,8 @@ class HTTPClient:
             await self.__session.close()
     
     async def request(self, method: str, endpoint: str, kwargs=None, filters: dict = None, includes: list = None) -> Union[Tuple, Dict]:
-        base_endpoint = self.url + endpoint
-
-        if filters:
-            base_endpoint = self.parse_filters(base_endpoint, filters)
-        
-        if includes:
-            base_endpoint = base_endpoint + f"/?include={','.join(includes)}"
-            
+        base_endpoint = self.parse_data(self.url + endpoint, filters, includes)
+  
         async with self.__session.request(method, base_endpoint, json=kwargs) as response:
             response_json = await response.json()
             await self.close()
