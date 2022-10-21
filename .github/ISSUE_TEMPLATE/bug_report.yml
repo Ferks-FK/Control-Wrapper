@@ -25,22 +25,22 @@ body:
     required: true
 
 - type: textarea
-    attributes:
-      label: System Information
-      description: >
-        Run `python -m control_wrapper -v` and paste this information below.
-    validations:
-      required: true
+  attributes:
+    label: System Information
+    description: >
+      Run `python -m control_wrapper -v` and paste this information below.
+  validations:
+    required: true
 
 - type: checkboxes
-    attributes:
-      label: Checklist
-      description: >
-        Please, before you open this issue, be sure that this has not been reported before.
-      options:
-        - label: I have searched the open issues for duplicates.
-          required: true
-        - label: I have shown the entire traceback, if possible.
-          required: true
-        - label: I have removed any sensitive if visible data (URL's and Tokens).
-          required: true
+  attributes:
+    label: Checklist
+    description: >
+      Please, before you open this issue, be sure that this has not been reported before.
+    options:
+      - label: I have searched the open issues for duplicates.
+        required: true
+      - label: I have shown the entire traceback, if possible.
+        required: true
+      - label: I have removed any sensitive if visible data (URL's and Tokens).
+        required: true
