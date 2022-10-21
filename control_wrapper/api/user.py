@@ -1,5 +1,4 @@
 from typing import TYPE_CHECKING, Union, Dict, List, Any
-from urllib import response
 
 #if TYPE_CHECKING:
 from .http import HTTPClient
@@ -286,7 +285,7 @@ class User(HTTPClient):
         return response[1]
     
     async def create_user(self, name: str, email: str, password: str = None) -> Union[Dict, Dict[List, str]]:
-        """|Corritine|
+        """|Corrotine|
         
         Returns
         -------
