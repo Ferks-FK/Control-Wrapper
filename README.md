@@ -16,7 +16,7 @@ This is intended to make CPGG API calls easier to use for any endpoint.
 Currently this project is being maintained by [Ferks-FK](https://github.com/Ferks-FK), and is in its initial stage (Alpha), so any bugs or problems you find, please open an issue on github.
 So far, this package is not on [PyPi](https://pypi.org) because it is still in its early stages.
 
-<h1 align="center">How to install?</h1>
+<h1 align="center">How to install/Upgrade</h1>
 
 At the moment you can test this package by installing the development version.
 You will need [GIT](https://git-scm.com) installed to use the commands below.
