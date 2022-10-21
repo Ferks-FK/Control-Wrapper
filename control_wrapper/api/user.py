@@ -1,9 +1,11 @@
 from typing import TYPE_CHECKING, Union, Dict, List, Any
+from urllib import response
 
 #if TYPE_CHECKING:
 from .http import HTTPClient
 from ..constants import *
-from ..errors import UnknownParameter, UnknownRole
+from ..errors import UnknownParameter, MissingParameter, UnknownRole
+from secrets import token_urlsafe
 
 class User(HTTPClient):
     def __init__(self, *args, **kwargs):
@@ -23,7 +25,6 @@ class User(HTTPClient):
 
         Returns
         -------
-
         Returns all users registered in the system or None if a specific user is not found.
 
         Optionally you can provide Filters or Includes user query.
@@ -47,7 +48,6 @@ class User(HTTPClient):
         --------
         includes: :class:`list`
             List of includes. Available Includes: `['servers', 'payments', 'vouchers', 'discordUser', 'notifications']`.
-
         """
 
         filters = {
@@ -101,7 +101,7 @@ class User(HTTPClient):
         -------
         Returns a dictionary with the user updated data.
 
-        If the `email` is in the incorrect format, an error will be returned.
+        If the `email` is in the incorrect format, or the user ID passed in does not exist, an error is returned.
         
         Parameters
         ----------
@@ -138,6 +138,8 @@ class User(HTTPClient):
 
         if response[0] == 422:
             return response[1]['errors']
+        elif response[0] == 404:
+            return response[1]['message']
 
         return response[1]
     
@@ -148,7 +150,7 @@ class User(HTTPClient):
         -------
         Returns a dict of the user who was suspended.
 
-        If the user is already suspended, an error will be returned.
+        If the user is already suspended, or, the user ID passed in does not exist, an error will be returned.
 
         Parameters
         ----------
@@ -159,6 +161,8 @@ class User(HTTPClient):
 
         if response[0] == 422:
             return response[1]['errors']
+        elif response[0] == 404:
+            return response[1]['message']
         
         return response[1]
     
@@ -169,7 +173,7 @@ class User(HTTPClient):
         -------
         Returns a dict of the user who had his suspension revoked.
         
-        If the user is not already suspended, an error will be returned.
+        If the user is not already suspended, or, the user ID passed in does not exist, an error will be returned.
 
         Parameters
         ----------
@@ -180,5 +184,171 @@ class User(HTTPClient):
         
         if response[0] == 422:
             return response[1]['errors']
+        elif response[0] == 404:
+            return response[1]['message']
         
         return response[1]
+    
+    async def increment_user(self, id: int, credits: int = None, server_limit: int = None) -> Union[Dict, Dict[List, str]]:
+        """|Corrotine|
+
+        Returns
+        -------
+        Returns a dict of the user who had an increment added.
+
+        If the user ID passed in does not exist, or if any parameter has an incorrect value, an error will be returned.
+
+        Parameters
+        ----------
+        id: :class:`int`
+            The user ID.
+        credits: :class:`int`
+            The amount of credits that will be added to the user.
+        server_limit: :class:`int`
+            The amount of server limit that will be added to the user.
+        
+        Info
+        ----
+        This method will not overwrite the user's existing server credits or limits, instead the new value will be added to the old one.
+        
+        The `credits` and `server_limit` parameters are not required simultaneously, but one of them must be supplied.
+        """
+        if credits is None and server_limit is None:
+            await self.__close()
+            raise MissingParameter("The parameters 'credits' and 'server_limit' is required, that is missing.")
+        
+        kwargs = {
+            'credits': credits,
+            'server_limit': server_limit
+        }
+
+        if kwargs['credits'] is None:
+            kwargs.pop('credits')
+        
+        if kwargs['server_limit'] is None:
+            kwargs.pop('server_limit')
+
+        response = await self._request("PATCH", f"api/users/{id}/increment", kwargs)
+
+        if response[0] == 422:
+            return response[1]['errors']
+        elif response[0] == 404:
+            return response[1]['message']
+        
+        return response[1]
+    
+    async def decrement_user(self, id: int, credits: int = None, server_limit: int = None) -> Union[Dict, Dict[List, str]]:
+        """|Corrotine|
+
+        Returns
+        -------
+        Returns a dict of the user who had an decrement added.
+
+        If the user ID passed in does not exist, or if any parameter has an incorrect value, an error will be returned.
+
+        Parameters
+        ----------
+        id: :class:`int`
+            The user ID.
+        credits: :class:`int`
+            The amount of credits that will be removed from the user.
+        server_limit: :class:`int`
+            The amount of server limit that will be removed from the user.
+        
+        Info
+        ----
+        This method will not overwrite the user's existing server credits or limits, instead the new value will be deducted from the old one.
+        
+        The `credits` and `server_limit` parameters are not required simultaneously, but one of them must be supplied.
+        """
+        if credits is None and server_limit is None:
+            await self.__close()
+            raise MissingParameter("The parameters 'credits' and 'server_limit' is required, that is missing.")
+        
+        kwargs = {
+            'credits': credits,
+            'server_limit': server_limit
+        }
+
+        if kwargs['credits'] is None:
+            kwargs.pop('credits')
+        
+        if kwargs['server_limit'] is None:
+            kwargs.pop('server_limit')
+
+        response = await self._request("PATCH", f"api/users/{id}/decrement", kwargs)
+
+        if response[0] == 422:
+            return response[1]['errors']
+        elif response[0] == 404:
+            return response[1]['message']
+        
+        return response[1]
+    
+    async def create_user(self, name: str, email: str, password: str = None) -> Union[Dict, Dict[List, str]]:
+        """|Corritine|
+        
+        Returns
+        -------
+        Returns a dict of the new registered user.
+
+        If any of the supplied parameters are in the wrong format or are missing, (with the exception of the password), an error will be returned.
+        
+        Parameters
+        ----------
+        name: :class:`str`
+            This parameter must be in the format alpha_num and be at least 4 to 30 characters long.
+        email: :class:`str`
+            This parameter must be in the correct format and be unique.
+        password: Optional[:class:`str`]
+            This parameter must be 8 to 191 characters long. If a password is not supplied, a random one will be generated.
+        
+        Info
+        ----
+
+        If a random password is generated, this method or the API will NOT return the password.
+        In this case, the user will need to reset their password on the website.
+        """
+        if password is None:
+            password = token_urlsafe(24)
+        
+        kwargs = {
+            'name': name,
+            'email': email,
+            'password': password
+        }
+
+        response = await self._request("POST", "api/users", kwargs)
+
+        if response[0] == 422:
+            return response[1]['errors']
+
+        return response[1]
+    
+    async def delete_user(self, id: int) -> Dict:
+        """|Corrotine|
+
+        Returns
+        -------
+        Returns a dict of the user that was deleted.
+
+        If the user ID does not exist, an error is returned.
+        
+        Parameters
+        ----------
+        id: :class:`int`
+            The user ID.
+        
+        Info
+        ----
+        Currently this endpoint will delete the user, even if they have servers associated with them, so use this with caution.
+        """
+        response = await self._request("DELETE", f"api/users/{id}")
+
+        if response[0] == 404:
+            return response[1]['message']
+        
+        return response[1]
+    
+
+
