@@ -3,6 +3,12 @@ description: Something is wrong with this package.
 labels: [not confirmed]
 assignees: Ferks-FK
 body:
+- type: markdown
+  atributes:
+    value: >
+      Found a problem?
+      Please provide as much detail as possible.
+
 - type: textarea
   atributes:
     label: Current Behavior
