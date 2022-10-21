@@ -19,10 +19,18 @@ So far, this package is not on [PyPi](https://pypi.org) because it is still in i
 <h1 align="center">How to install?</h1>
 
 At the moment you can test this package by installing the development version.
-You will need [GIT](https://git-scm.com) installed to use the command below.
+You will need [GIT](https://git-scm.com) installed to use the commands below.
+
+To install:
 
 ```
 pip install git+https://github.com/Ferks-FK/Control-Wrapper@development
+```
+
+To upgrade:
+
+```
+pip install --force-reinstall --no-deps git+https://github.com/Ferks-FK/Control-Wrapper@development
 ```
 
 <h1 align="center">Usage Examples</h1>
