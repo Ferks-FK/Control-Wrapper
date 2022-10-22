@@ -1,6 +1,4 @@
 from typing import Dict, Tuple, Union
-
-#if TYPE_CHECKING:
 from aiohttp import ClientSession
 from urllib import parse
 

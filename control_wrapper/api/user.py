@@ -1,6 +1,4 @@
-from typing import TYPE_CHECKING, Union, Dict, List, Any
-
-#if TYPE_CHECKING:
+from typing import Union, Dict, List, Any
 from .http import HTTPClient
 from ..constants import *
 from ..errors import UnknownParameter, MissingParameter, UnknownRole
@@ -19,14 +17,14 @@ class User(HTTPClient):
         role: str = None,
         suspended: bool = None,
         includes: list = None
-    ) -> Union[Dict, List[Dict], None]:
+    ) -> Union[Dict, None]:
         """|Corrotine|
 
         Returns
         -------
-        Returns all users registered in the system or None if a specific user is not found.
+        Returns all users registered in the system or `None` if a specific user is not found.
 
-        Optionally you can provide Filters or Includes user query.
+        Optionally you can provide Filters and Includes for user query.
 
         Filters
         -------

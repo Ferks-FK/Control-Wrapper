@@ -1,18 +1,17 @@
-from typing import TYPE_CHECKING
-from .errors import MissingParameter
-
-#if TYPE_CHECKING:
-from aiohttp import ClientSession, ClientTimeout, ServerTimeoutError
-from .api import User
-
+from .api import User, Server
 
 class ControlWrapper:
-    def __init__(self, url: str = None, token: str = None):
-        if url is None:
-            raise MissingParameter("The parameter 'url' is required, that it is missing.")
-        elif token is None:
-            raise MissingParameter("The parameter 'api_key' is required, that it is missing.")
-        
+    """
+    The main class for connecting to the CPGG API.
+
+    Parameters
+    ----------
+    url: :class:`str`
+        The URL of your CPGG client.
+    token: :str:`str`
+        Your CPGG client token.
+    """
+    def __init__(self, url: str, token: str):
         if not url.endswith("/"):
             url += "/"
 
@@ -22,3 +21,7 @@ class ControlWrapper:
     @property
     def user(self):
         return User(self._token, self._url)
+    
+    @property
+    def server(self):
+        return Server(self._token, self._url)
