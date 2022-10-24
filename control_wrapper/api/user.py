@@ -2,6 +2,7 @@ from typing import Union, Dict, List, Any
 from .http import HTTPClient
 from ..constants import *
 from ..errors import UnknownParameter, MissingParameter, UnknownRole
+from ..utils import parse_dict
 from secrets import token_urlsafe
 
 class User(HTTPClient):
@@ -44,7 +45,7 @@ class User(HTTPClient):
         Includes
         --------
         includes: :class:`list`
-            List of includes. Available Includes: `['servers', 'payments', 'vouchers', 'discordUser', 'notifications']`.
+            List of includes. Available Includes: `['servers', 'serversCount', 'notifications', 'notificationsCount', 'payments', 'paymentsCount', 'vouchers', 'vouchersCount', 'discordUser', 'discordUserCount']`.
         """
 
         filters = {
@@ -55,12 +56,12 @@ class User(HTTPClient):
             'role': role,
             'suspended': 1 if suspended else (0 if suspended is False else suspended) # https://github.com/ControlPanel-gg/dashboard/issues/582
         }
-        filters = {key: value for key, value in filters.items() if value is not None}
+        filters = parse_dict(filters)
 
         if includes:
             for include in includes:
                 if include not in AVAILABLE_INCLUDES_USERS_PARAMS:
-                    await self.__close()
+                    await self._close()
                     raise UnknownParameter(f"The include '{include}' is not recognized. Available Includes: {AVAILABLE_INCLUDES_USERS_PARAMS}.")
 
         response = await self._request("GET", "api/users", filters=filters, includes=includes)
@@ -70,7 +71,7 @@ class User(HTTPClient):
 
         return response[1]
     
-    async def user_details(self, id: int) -> Union[Dict, None]:
+    async def user_details(self, id: int, includes: list = None) -> Union[Dict, None]:
         """|Corrotine|
 
         Returns
@@ -83,8 +84,19 @@ class User(HTTPClient):
         ----------
         id: :class:`int`
             The user ID or discord_id.
+        
+        Includes
+        --------
+        includes: :class:`list`
+            List of includes. Available Includes: `['servers', 'serversCount', 'notifications', 'notificationsCount', 'payments', 'paymentsCount', 'vouchers', 'vouchersCount', 'discordUser', 'discordUserCount']`.
         """
-        response = await self._request("GET", f"api/users/{id}")
+        if includes:
+            for include in includes:
+                if include not in AVAILABLE_INCLUDES_USERS_PARAMS:
+                    await self._close()
+                    raise UnknownParameter(f"The include '{include}' is not recognized. Available Includes: {AVAILABLE_INCLUDES_USERS_PARAMS}.")
+
+        response = await self._request("GET", f"api/users/{id}", includes=includes)
 
         if response[0] == 404:
             return None
@@ -121,11 +133,11 @@ class User(HTTPClient):
         """
         for key, value in kwargs.items():
             if key not in AVAILABLE_UPDATE_USER_PARAMS:
-                await self.__close()
+                await self._close()
                 raise UnknownParameter(f"The parameter '{value}' is not recognized. Available Parameters: {AVAILABLE_UPDATE_USER_PARAMS}.")
 
             if key == "role" and value not in AVAILABLE_UPDATE_ROLE_PARAMS:
-                await self.__close()
+                await self._close()
                 raise UnknownRole(f"The role '{value}' is not recognized, Available Roles: {AVAILABLE_UPDATE_ROLE_PARAMS}.")
 
         kwargs['name'] = name
@@ -211,7 +223,7 @@ class User(HTTPClient):
         The `credits` and `server_limit` parameters are not required simultaneously, but one of them must be supplied.
         """
         if credits is None and server_limit is None:
-            await self.__close()
+            await self._close()
             raise MissingParameter("The parameters 'credits' and 'server_limit' is required, that is missing.")
         
         kwargs = {
@@ -259,7 +271,7 @@ class User(HTTPClient):
         The `credits` and `server_limit` parameters are not required simultaneously, but one of them must be supplied.
         """
         if credits is None and server_limit is None:
-            await self.__close()
+            await self._close()
             raise MissingParameter("The parameters 'credits' and 'server_limit' is required, that is missing.")
         
         kwargs = {
@@ -302,7 +314,6 @@ class User(HTTPClient):
         
         Info
         ----
-
         If a random password is generated, this method or the API will NOT return the password.
         In this case, the user will need to reset their password on the website.
         """

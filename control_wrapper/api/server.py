@@ -2,6 +2,7 @@ from typing import Union, Dict, Any
 from .http import HTTPClient
 from ..constants import AVAILABLE_INCLUDES_SERVERS_PARAMS
 from ..errors import UnknownParameter
+from ..utils import parse_dict
 from datetime import datetime
 
 class Server(HTTPClient):
@@ -39,12 +40,12 @@ class Server(HTTPClient):
         product_id: :class:`str`
             The ID of the product from which the server originates.
         suspended: :class:`str` | :class:`datetime`
-            A `String` or `DateTime` object containing the date on which the server was suspended.
+            A `str` or `datetime` object containing the date on which the server was suspended.
 
         Includes
         --------
         includes: :class:`list`
-            List of includes. Available Includes: `['product', 'user'].`
+            List of includes. Available Includes: `['product', 'productCount', 'user', 'userCount'].`
         """
         filters = {
             'name': name,
@@ -54,7 +55,7 @@ class Server(HTTPClient):
             'product_id': product_id,
             'suspended': suspended
         }
-        filters = {key: value for key, value in filters.items() if value is not None}
+        filters = parse_dict(filters)
 
         if filters.get('suspended') is not None and isinstance(filters['suspended'], datetime):
             filters['suspended'] = filters['suspended'].strftime("%Y-%m-%d")
@@ -62,7 +63,7 @@ class Server(HTTPClient):
         if includes:
             for include in includes:
                 if include not in AVAILABLE_INCLUDES_SERVERS_PARAMS:
-                    self.__close()
+                    self._close()
                     raise UnknownParameter(f"The include '{include}' is not recognized. Available Includes: {AVAILABLE_INCLUDES_SERVERS_PARAMS}.")
 
         response = await self._request("GET", "api/servers", filters=filters, includes=includes)
@@ -72,7 +73,7 @@ class Server(HTTPClient):
         
         return response[1]
     
-    async def server_details(self, id: str) -> Union[Dict, None]:
+    async def server_details(self, id: str, includes: list = None) -> Union[Dict, None]:
         """|Corrotine|
 
         Returns
@@ -83,8 +84,19 @@ class Server(HTTPClient):
         ----------
         id: :class:`str`
             The server ID.
+        
+        Includes
+        --------
+        includes: :class:`list`
+            List of includes. Available Includes: `['product', 'productCount', 'user', 'userCount'].`
         """
-        response = await self._request("GET", f"api/servers/{id}")
+        if includes:
+            for include in includes:
+                if include not in AVAILABLE_INCLUDES_SERVERS_PARAMS:
+                    self._close()
+                    raise UnknownParameter(f"The include '{include}' is not recognized. Available Includes: {AVAILABLE_INCLUDES_SERVERS_PARAMS}.")
+
+        response = await self._request("GET", f"api/servers/{id}", includes=includes)
 
         if response[0] == 404:
             return None
