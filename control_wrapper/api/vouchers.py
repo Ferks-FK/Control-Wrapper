@@ -69,7 +69,7 @@ class Voucher(HTTPClient):
 
         Returns
         -------
-        Returns data for a specific voucher, or `None` if not found.
+        Returns a dict with the specific voucher data, or `None` if none is found.
         
         Includes
         --------
@@ -96,7 +96,7 @@ class Voucher(HTTPClient):
         uses: int,
         credits: int,
         **kwargs: Any
-    ):
+    ) -> Union[Dict, str]:
         """|Corrotine|
 
         Returns
@@ -139,7 +139,7 @@ class Voucher(HTTPClient):
         
         return response[1]
     
-    async def create_voucher(self, uses: int, credits: int, code: str = None, **kwargs: Any):
+    async def create_voucher(self, uses: int, credits: int, code: str = None, **kwargs: Any) -> Dict:
         """|Corrotine|
 
         Returns
@@ -183,12 +183,12 @@ class Voucher(HTTPClient):
         
         return response[1]
     
-    async def delete_voucher(self, id: int):
+    async def delete_voucher(self, id: int) -> Dict:
         """|Corrotine|
 
         Returns
         -------
-        Returns the deleted voucher information, or an error if the ID passed in does not exist.
+        Returns a dict with the deleted voucher information, or an error if the passed ID does not exist.
 
         Parameters
         ----------
