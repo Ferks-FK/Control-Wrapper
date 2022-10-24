@@ -63,7 +63,7 @@ class Server(HTTPClient):
         if includes:
             for include in includes:
                 if include not in AVAILABLE_INCLUDES_SERVERS_PARAMS:
-                    self._close()
+                    await self._close()
                     raise UnknownParameter(f"The include '{include}' is not recognized. Available Includes: {AVAILABLE_INCLUDES_SERVERS_PARAMS}.")
 
         response = await self._request("GET", "api/servers", filters=filters, includes=includes)
@@ -93,7 +93,7 @@ class Server(HTTPClient):
         if includes:
             for include in includes:
                 if include not in AVAILABLE_INCLUDES_SERVERS_PARAMS:
-                    self._close()
+                    await self._close()
                     raise UnknownParameter(f"The include '{include}' is not recognized. Available Includes: {AVAILABLE_INCLUDES_SERVERS_PARAMS}.")
 
         response = await self._request("GET", f"api/servers/{id}", includes=includes)
