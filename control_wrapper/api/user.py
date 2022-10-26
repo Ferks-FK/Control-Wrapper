@@ -76,7 +76,7 @@ class User(HTTPClient):
 
         Returns
         -------
-        Returns data for a specific user, or None if the user is not found.
+        Returns data for a specific user, or `None` if the user is not found.
 
         This is useful for checking whether a user has verified his discord account.
 
