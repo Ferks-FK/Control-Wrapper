@@ -9,7 +9,7 @@ const config = {
   title: 'Control-Wrapper',
   tagline: 'Control-Wrapper is an open source API Wrapper written in Python for the ControlPanel API (CPGG).',
   url: 'https://ferks-fk.github.io',
-  baseUrl: '/',
+  baseUrl: '/Control-Wrapper/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
