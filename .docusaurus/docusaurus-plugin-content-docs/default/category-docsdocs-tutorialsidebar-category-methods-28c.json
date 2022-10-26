@@ -1,0 +1,16 @@
+{
+  "title": "Methods",
+  "description": "5 minutes to learn the most important Docusaurus concepts.",
+  "slug": "/category/methods",
+  "permalink": "/docs/docs/category/methods",
+  "navigation": {
+    "previous": {
+      "title": "Introduction",
+      "permalink": "/docs/docs/"
+    },
+    "next": {
+      "title": "Users",
+      "permalink": "/docs/docs/development/users"
+    }
+  }
+}

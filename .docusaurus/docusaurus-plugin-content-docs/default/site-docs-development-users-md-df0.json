@@ -1,0 +1,27 @@
+{
+  "unversionedId": "development/users",
+  "id": "development/users",
+  "title": "Users",
+  "description": "Listed below are all the user methods, along with their parameters, filters, and includes.",
+  "source": "@site/docs/development/users.md",
+  "sourceDirName": "development",
+  "slug": "/development/users",
+  "permalink": "/docs/docs/development/users",
+  "draft": false,
+  "editUrl": "https://github.com/Control-Wrapper/Control-Wrapper/docs/development/users.md",
+  "tags": [],
+  "version": "current",
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "sidebar_position": 1
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Methods",
+    "permalink": "/docs/docs/category/methods"
+  },
+  "next": {
+    "title": "Tutorial - Basics",
+    "permalink": "/docs/docs/category/tutorial---basics"
+  }
+}
