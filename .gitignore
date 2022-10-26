@@ -153,3 +153,4 @@ yarn-error.log*
 # Others
 teste.py
 test_control_wrapper.py
+node_modules
