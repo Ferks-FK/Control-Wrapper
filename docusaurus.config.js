@@ -8,8 +8,8 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 const config = {
   title: 'Control-Wrapper',
   tagline: 'Control-Wrapper is an open source API Wrapper written in Python for the ControlPanel API (CPGG).',
-  url: 'https://control-wrapper.github.io',
-  baseUrl: '/docs/',
+  url: 'https://ferks-fk.github.io',
+  baseUrl: '/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
