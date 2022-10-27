@@ -1,5 +1,5 @@
 AVAILABLE_UPDATE_USER_PARAMS = ['credits', 'server_limit', 'role']
-AVAILABLE_UPDATE_ROLE_PARAMS = ['admin', 'mod', 'client', 'member']
+AVAILABLE_UPDATE_ROLE_PARAMS = ['admin', 'moderator', 'client', 'member']
 AVAILABLE_INCLUDES_USERS_PARAMS = ['servers', 'serversCount', 'notifications', 'notificationsCount', 'payments', 'paymentsCount', 'vouchers', 'vouchersCount', 'discordUser', 'discordUserCount']
 AVAILABLE_INCLUDES_SERVERS_PARAMS = ['product', 'productCount', 'user', 'userCount']
 AVAILABLE_INCLUDES_VOUCHERS_PARAMS = ['users', 'usersCount']

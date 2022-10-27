@@ -38,7 +38,7 @@ class User(HTTPClient):
         pterodactyl_id: :class:`int`
             The Pterodactyl ID of the user.
         role: :class:`str`
-            The user role. Available Roles: `['admin', 'mod', 'client', 'member']`.
+            The user role. Available Roles: `['admin', 'moderator', 'client', 'member']`.
         suspended: :class:`bool`
             Whether the user is suspended or not.
         
@@ -57,6 +57,10 @@ class User(HTTPClient):
             'suspended': 1 if suspended else (0 if suspended is False else suspended) # https://github.com/ControlPanel-gg/dashboard/issues/582
         }
         filters = parse_dict(filters)
+
+        if role is not None and role not in AVAILABLE_UPDATE_ROLE_PARAMS:
+            await self._close()
+            raise UnknownRole(f"The role '{role}' is not recognized, Available Roles: {AVAILABLE_UPDATE_ROLE_PARAMS}.")
 
         if includes:
             for include in includes:
@@ -125,12 +129,14 @@ class User(HTTPClient):
         server_limit: Optional[:class:`int`]
             The amount of servers user can manage.
         role: Optional[:class:`str`]
-            The new user role. Valid Roles: `['admin', 'mod', 'client', 'member']`.
+            The new user role. Valid Roles: `['admin', 'moderator', 'client', 'member']`.
         
         Info
         ----
         For some reason the API forces you to pass the user `name` and `email` address in order to update it.
         """
+        kwargs = parse_dict(kwargs)
+
         for key, value in kwargs.items():
             if key not in AVAILABLE_UPDATE_USER_PARAMS:
                 await self._close()
@@ -230,12 +236,7 @@ class User(HTTPClient):
             'credits': credits,
             'server_limit': server_limit
         }
-
-        if kwargs['credits'] is None:
-            kwargs.pop('credits')
-        
-        if kwargs['server_limit'] is None:
-            kwargs.pop('server_limit')
+        kwargs = parse_dict(kwargs)
 
         response = await self._request("PATCH", f"api/users/{id}/increment", kwargs)
 
@@ -278,12 +279,7 @@ class User(HTTPClient):
             'credits': credits,
             'server_limit': server_limit
         }
-
-        if kwargs['credits'] is None:
-            kwargs.pop('credits')
-        
-        if kwargs['server_limit'] is None:
-            kwargs.pop('server_limit')
+        kwargs = parse_dict(kwargs)
 
         response = await self._request("PATCH", f"api/users/{id}/decrement", kwargs)
 
