@@ -72,27 +72,4 @@ asyncio.run(get_users())
 <h1 align="center">Available Endpoints</h1>
 
 Currently only a few endpoints are available, the rest will be implemented as the project develops.
-
-```py
-api = CPGG("https://mydomain.com", "my token")
-
-# User endpoints
-
-api.user.create_user()
-api.user.update_user()
-api.user.delete_user()
-api.user.list_users()
-api.user.user_details()
-api.user.suspend_user()
-api.user.unsuspend_user()
-api.user.increment_user()
-api.user.decrement_user()
-
-# Server endpoints:
-
-api.server.list_servers()
-api.server.server_details()
-api.server.suspend_server()
-api.server.unsuspend_server()
-api.server.delete_server()
-```
+You can see the endpoints in the [Docs](https://ferks-fk.github.io/Control-Wrapper/).
