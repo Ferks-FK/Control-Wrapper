@@ -17,7 +17,7 @@ setup(
     author="Ferks-FK",
     url="https://github.com/Ferks-FK/Control-Wrapper",
     install_requires=requirements,
-    python_requires=">=3.8.0",
+    python_requires=">=3.10.0",
     packages=find_packages(),
     classifiers=[
         "Development Status :: 1 - Development/Alpha",
