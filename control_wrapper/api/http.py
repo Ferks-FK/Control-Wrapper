@@ -39,7 +39,7 @@ class HTTPClient:
         if self.__session:
             await self.__session.close()
     
-    async def _request(self, method: str, endpoint: str, kwargs=None, filters: dict = None, includes: list = None) -> Union[Tuple, Dict]:
+    async def _request(self, method: str, endpoint: str, kwargs: dict = None, filters: dict = None, includes: list = None) -> Union[Tuple, Dict]:
         base_endpoint = self.__parse_data(self.__url + endpoint, filters, includes)
   
         async with self.__session.request(method, base_endpoint, json=kwargs) as response:

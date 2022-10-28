@@ -38,7 +38,7 @@ class User(HTTPClient):
         pterodactyl_id: :class:`int`
             The Pterodactyl ID of the user.
         role: :class:`str`
-            The user role. Available Roles: `['admin', 'moderator', 'client', 'member']`.
+            The user role. Available Roles: `['admin', 'mod', 'client', 'member']`.
         suspended: :class:`bool`
             Whether the user is suspended or not.
         
@@ -47,7 +47,6 @@ class User(HTTPClient):
         includes: :class:`list`
             List of includes. Available Includes: `['servers', 'serversCount', 'notifications', 'notificationsCount', 'payments', 'paymentsCount', 'vouchers', 'vouchersCount', 'discordUser', 'discordUserCount']`.
         """
-
         filters = {
             'name': name,
             'email': email,
@@ -129,7 +128,7 @@ class User(HTTPClient):
         server_limit: Optional[:class:`int`]
             The amount of servers user can manage.
         role: Optional[:class:`str`]
-            The new user role. Valid Roles: `['admin', 'moderator', 'client', 'member']`.
+            The new user role. Valid Roles: `['admin', 'mod', 'client', 'member']`.
         
         Info
         ----

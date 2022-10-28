@@ -118,6 +118,8 @@ class Voucher(HTTPClient):
         expires_at: Optional[:class:`str` | :class:`datetime`]
             A `str` or `datetime` object containing the voucher expiration date.
         """
+        kwargs = parse_dict(kwargs)
+
         for key, value in kwargs.items():
             if key not in AVAILABLE_UPDATE_VOUCHER_PARAMS:
                 await self._close()
@@ -161,6 +163,8 @@ class Voucher(HTTPClient):
         expires_at: Optional[:class:`str` | :class:`datetime`]
             A `str` or `datetime` object containing the voucher expiration date.
         """
+        kwargs = parse_dict(kwargs)
+
         if code is None:
             code = ''.join(choices(ascii_uppercase + digits, k=7)) # Generate a random 7-digit code.
         
