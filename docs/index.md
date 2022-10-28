@@ -32,5 +32,3 @@ Go to `https://your-panel/admin/api/` and create a new one.
 
 With this API key, you can authenticate yourself through Control-Wrapper, and make your requests.
 You are now ready to use the Wrapper.
-
-You can find some code examples [here](https://google.com).

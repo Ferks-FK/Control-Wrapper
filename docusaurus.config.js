@@ -38,7 +38,7 @@ const config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/Control-Wrapper/Control-Wrapper',
+            'https://github.com/Ferks-FK/Control-Wrapper/tree/docs',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
@@ -63,8 +63,13 @@ const config = {
             position: 'left',
             label: 'Documentation',
           },
+          // {
+          //   type: 'docsVersionDropdown',
+          //   position: 'right',
+          //   dropdownActiveClassDisabled: true
+          // },
           {
-            href: 'https://github.com/Control-Wrapper/Control-Wrapper',
+            href: 'https://github.com/Ferks-FK/Control-Wrapper',
             label: 'GitHub',
             position: 'right',
           },
@@ -96,7 +101,7 @@ const config = {
             items: [
               {
                 label: 'GitHub',
-                href: 'https://github.com/Control-Wrapper/Control-Wrapper',
+                href: 'https://github.com/Ferks-FK/Control-Wrapper',
               }
             ],
           },
