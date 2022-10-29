@@ -111,6 +111,8 @@ class Notifications(HTTPClient):
             await self._close()
             raise UnknownParamValue(f"The value '{via}' of the parameter 'via' It is not recognized. Available Values: {AVAILABLE_NOTIFICATIONS_PARAMS}.")
         
+        users = [str(user) if isinstance(user, int) else user for user in users] # Convert all integers to string.
+
         kwargs = {
             "title": title,
             "content": content,
