@@ -4,3 +4,4 @@ AVAILABLE_INCLUDES_USERS_PARAMS = ['servers', 'serversCount', 'notifications', '
 AVAILABLE_INCLUDES_SERVERS_PARAMS = ['product', 'productCount', 'user', 'userCount']
 AVAILABLE_INCLUDES_VOUCHERS_PARAMS = ['users', 'usersCount']
 AVAILABLE_UPDATE_VOUCHER_PARAMS = ['memo', 'expires_at']
+AVAILABLE_NOTIFICATIONS_PARAMS = ['mail', 'database']

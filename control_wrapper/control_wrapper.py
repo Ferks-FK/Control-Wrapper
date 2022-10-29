@@ -1,4 +1,4 @@
-from .api import User, Server, Voucher
+from .api import *
 
 class ControlWrapper:
     """
@@ -29,3 +29,7 @@ class ControlWrapper:
     @property
     def voucher(self):
         return Voucher(self._token, self._url)
+    
+    @property
+    def notification(self):
+        return Notifications(self._token, self._url)

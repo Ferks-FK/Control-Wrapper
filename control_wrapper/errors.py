@@ -17,6 +17,10 @@ class UnknownRole(ControlWrapperException):
     """Exception generated when user supply an unknown role."""
     pass
 
+class UnknownParamValue(ControlWrapperException):
+    """Exception generated when the user provides an unknown value for a parameter."""
+    pass
+
 class MaxRetriesExeption(ControlWrapperException):
     """Exception generated when the maximum number of retries is reached."""
     pass
