@@ -32,7 +32,7 @@ name: `str` -> The user name.<br/>
 email: `str` -> The user email.<br/>
 server_limit: `int` -> Limit of user servers.<br/>
 pterodactyl_id: `int` -> The Pterodactyl ID of the user.<br/>
-role: `str` -> The user role. Available Roles: `['admin', 'mod', 'client', 'member']`.<br/>
+role: `str` -> The user role. Available Roles: `['admin', 'moderator', 'client', 'member']`.<br/>
 suspended: `bool` -> Whether the user is suspended or not.<br/>
 includes: `list` -> List of includes. Available Includes: `['servers', 'serversCount', 'notifications', 'notificationsCount', 'payments', 'paymentsCount', 'vouchers', 'vouchersCount', 'discordUser', 'discordUserCount']`.
 :::
